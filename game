@@ -40,16 +40,7 @@
     -webkit-text-fill-color: transparent;
     background-clip: text;
     text-align: center;
-    margin-bottom: 4px;
-  }
-
-  .tagline {
-    color: var(--muted);
-    font-size: 0.85rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
     margin-bottom: 32px;
-    text-align: center;
   }
 
   .card {
@@ -93,10 +84,7 @@
     transition: border-color 0.2s;
   }
 
-  input[type="text"]:focus {
-    border-color: var(--accent);
-  }
-
+  input[type="text"]:focus { border-color: var(--accent); }
   input[type="text"]::placeholder { color: var(--muted); }
 
   .btn {
@@ -114,6 +102,7 @@
   }
 
   .btn:active { transform: scale(0.98); }
+  .btn:hover { opacity: 0.88; }
 
   .btn-primary {
     background: linear-gradient(135deg, var(--accent), var(--accent2));
@@ -136,8 +125,6 @@
     margin-top: 0;
   }
 
-  .btn:hover { opacity: 0.88; }
-
   .count-badge {
     display: inline-block;
     background: var(--border);
@@ -148,11 +135,9 @@
     margin-left: 8px;
   }
 
-  /* Screens */
   .screen { display: none; width: 100%; max-width: 480px; flex-direction: column; align-items: center; }
   .screen.active { display: flex; }
 
-  /* Reveal card */
   .reveal-card {
     background: linear-gradient(145deg, #1e1530, #2a1545);
     border: 1px solid #4a2d6e;
@@ -172,10 +157,7 @@
     margin-bottom: 8px;
   }
 
-  .kink-list {
-    list-style: none;
-    margin: 20px 0 0;
-  }
+  .kink-list { list-style: none; margin: 20px 0 0; }
 
   .kink-list li {
     font-family: 'Playfair Display', serif;
@@ -195,12 +177,6 @@
     color: var(--accent);
     margin-right: 8px;
     letter-spacing: 0.1em;
-  }
-
-  .round-info {
-    color: var(--muted);
-    font-size: 0.85rem;
-    margin-bottom: 16px;
   }
 
   .remaining-count {
@@ -254,10 +230,7 @@
     color: var(--accent);
   }
 
-  .admin-screen-wrapper {
-    width: 100%;
-    max-width: 480px;
-  }
+  .admin-screen-wrapper { width: 100%; max-width: 480px; }
 
   .entry-preview {
     background: var(--bg);
@@ -296,8 +269,6 @@
 
   .particle {
     position: absolute;
-    width: 8px;
-    height: 8px;
     border-radius: 50%;
     animation: fall linear forwards;
   }
@@ -312,8 +283,7 @@
 
 <h1>LICK</h1>
 
-<!-- Mode toggle -->
-<div class="mode-toggle" id="modeToggle">
+<div class="mode-toggle">
   <button class="mode-btn active" onclick="showMode('submit')">Submit</button>
   <button class="mode-btn" onclick="showMode('admin')">Draw</button>
 </div>
@@ -337,28 +307,26 @@
   </div>
 </div>
 
-<!-- ADMIN / DRAW SCREEN -->
+<!-- DRAW SCREEN -->
 <div class="screen" id="adminScreen">
   <div class="admin-screen-wrapper">
 
     <div class="card" id="drawSection" style="text-align:center;">
       <h2>LICK <span class="count-badge" id="countBadge">0 entries</span></h2>
       <p style="font-size:0.85rem; color:var(--muted); margin-bottom:20px;">Draw one mystery set at a time. The group guesses who!</p>
-      <button class="btn btn-reveal" onclick="drawEntry()" id="drawBtn">Draw from the bowl</button>
+      <button class="btn btn-reveal" onclick="drawEntry()">Draw from the bowl</button>
       <p class="remaining-count" id="remainingCount"></p>
     </div>
 
-    <!-- Reveal -->
     <div id="revealSection" style="display:none; width:100%;">
       <div class="reveal-card">
         <div class="reveal-label">Mystery person's kinks</div>
         <ul class="kink-list" id="revealList"></ul>
       </div>
       <button class="btn btn-primary" onclick="nextDraw()">Draw next</button>
-      <button class="btn btn-secondary" onclick="backToBowl()">↩ Back to bowl</button>
+      <button class="btn btn-secondary" onclick="backToBowl()">Back to bowl</button>
     </div>
 
-    <!-- Entries list -->
     <div class="card" style="margin-top:8px;">
       <h2>Entries <span class="count-badge" id="listCount">0</span></h2>
       <div id="entryList"><p style="color:var(--muted); font-size:0.85rem;">No entries yet.</p></div>
@@ -368,31 +336,17 @@
   </div>
 </div>
 
-<!-- Toast -->
 <div class="toast" id="toast"></div>
-<!-- Confetti container -->
 <div class="confetti" id="confetti"></div>
 
 <script>
-  // Storage key
   const KEY = 'lick_bowl_entries';
   const DRAWN_KEY = 'lick_bowl_drawn';
 
-  function getEntries() {
-    return JSON.parse(localStorage.getItem(KEY) || '[]');
-  }
-
-  function getDrawn() {
-    return JSON.parse(localStorage.getItem(DRAWN_KEY) || '[]');
-  }
-
-  function saveEntries(arr) {
-    localStorage.setItem(KEY, JSON.stringify(arr));
-  }
-
-  function saveDrawn(arr) {
-    localStorage.setItem(DRAWN_KEY, JSON.stringify(arr));
-  }
+  function getEntries() { return JSON.parse(localStorage.getItem(KEY) || '[]'); }
+  function getDrawn() { return JSON.parse(localStorage.getItem(DRAWN_KEY) || '[]'); }
+  function saveEntries(arr) { localStorage.setItem(KEY, JSON.stringify(arr)); }
+  function saveDrawn(arr) { localStorage.setItem(DRAWN_KEY, JSON.stringify(arr)); }
 
   function showToast(msg) {
     const t = document.getElementById('toast');
@@ -405,11 +359,7 @@
     const k1 = document.getElementById('k1').value.trim();
     const k2 = document.getElementById('k2').value.trim();
     const k3 = document.getElementById('k3').value.trim();
-
-    if (!k1 || !k2 || !k3) {
-      showToast('Fill in all 3 kinks first!');
-      return;
-    }
+    if (!k1 || !k2 || !k3) { showToast('Fill in all 3 kinks first!'); return; }
 
     const entries = getEntries();
     entries.push({ id: Date.now(), kinks: [k1, k2, k3] });
@@ -428,25 +378,18 @@
     const entries = getEntries();
     const drawn = getDrawn();
     const remaining = entries.filter(e => !drawn.includes(e.id));
-
-    if (remaining.length === 0) {
-      showToast('Bowl is empty! All entries drawn.');
-      return;
-    }
+    if (remaining.length === 0) { showToast('All entries have been drawn!'); return; }
 
     const pick = remaining[Math.floor(Math.random() * remaining.length)];
     drawn.push(pick.id);
     saveDrawn(drawn);
 
-    // Show reveal
-    const list = document.getElementById('revealList');
-    list.innerHTML = pick.kinks.map((k, i) =>
+    document.getElementById('revealList').innerHTML = pick.kinks.map((k, i) =>
       `<li><span class="kink-num">#${i+1}</span>${k}</li>`
     ).join('');
 
     document.getElementById('drawSection').style.display = 'none';
     document.getElementById('revealSection').style.display = 'block';
-
     updateAdminUI();
     confettiBurst();
   }
@@ -468,13 +411,11 @@
     const drawn = getDrawn();
     const remaining = entries.filter(e => !drawn.includes(e.id));
 
-    document.getElementById('countBadge').textContent =
-      entries.length === 1 ? '1 entry' : `${entries.length} entries`;
+    document.getElementById('countBadge').textContent = entries.length === 1 ? '1 entry' : `${entries.length} entries`;
     document.getElementById('listCount').textContent = entries.length;
     document.getElementById('remainingCount').textContent =
-      remaining.length > 0
-        ? `${remaining.length} left in the bowl`
-        : entries.length > 0 ? 'All drawn!' : '';
+      remaining.length > 0 ? `${remaining.length} left` :
+      entries.length > 0 ? 'All drawn!' : '';
 
     const listEl = document.getElementById('entryList');
     if (entries.length === 0) {
@@ -490,12 +431,8 @@
   }
 
   function deleteEntry(id) {
-    let entries = getEntries();
-    entries = entries.filter(e => e.id !== id);
-    saveEntries(entries);
-    let drawn = getDrawn();
-    drawn = drawn.filter(d => d !== id);
-    saveDrawn(drawn);
+    saveEntries(getEntries().filter(e => e.id !== id));
+    saveDrawn(getDrawn().filter(d => d !== id));
     updateAdminUI();
     showToast('Entry removed.');
   }
@@ -507,7 +444,7 @@
     document.getElementById('revealSection').style.display = 'none';
     document.getElementById('drawSection').style.display = 'block';
     updateAdminUI();
-    showToast('Bowl cleared!');
+    showToast('Cleared!');
   }
 
   function showMode(mode) {
@@ -536,7 +473,6 @@
     }
   }
 
-  // Init
   updateAdminUI();
 </script>
 </body>
